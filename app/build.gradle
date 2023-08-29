@@ -1,0 +1,93 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services'
+}
+
+//  Load properties from keystore.properties
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+
+//  Creating a new Properties() object
+def keystoreProperties = new Properties()
+
+//  If keystorePropertiesFile exists, read from that, else set from build environment
+if (keystorePropertiesFile.exists()) {
+    //  Loading the keystoreProperties file
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+} else {
+    //  Read all environment variables from the build environment
+    keystoreProperties.setProperty("storeFile", "${System.getenv('STORE_FILE')}")
+    keystoreProperties.setProperty("keyAlias", "${System.getenv('KEY_ALIAS')}")
+    keystoreProperties.setProperty("keyPassword", "${System.getenv('KEY_PASSWORD')}")
+    keystoreProperties.setProperty("storePassword", "${System.getenv('STORE_PASSWORD')}")
+}
+
+android {
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.mpxdevgroup.test"
+        minSdk 26
+        targetSdk 33
+        versionCode 3
+        versionName "1.1"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    signingConfigs {
+        release {
+            // For AWS CodeBuild
+            release {
+                storeFile file(keystoreProperties['storeFile'])
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storePassword keystoreProperties['storePassword']
+            }
+            // For CodeMagic
+//            if (System.getenv()["CI"]) { // CI=true is exported by Codemagic
+//                storeFile file(System.getenv()["CM_KEYSTORE_PATH"])
+//                storePassword System.getenv()["CM_KEYSTORE_PASSWORD"]
+//                keyAlias System.getenv()["CM_KEY_ALIAS"]
+//                keyPassword System.getenv()["CM_KEY_PASSWORD"]
+//            }
+//            else {
+//                keyAlias keystoreProperties['keyAlias']
+//                keyPassword keystoreProperties['keyPassword']
+//                storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+//                storePassword keystoreProperties['storePassword']
+//            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+//    id("com.google.firebase.appdistribution") version "4.0.0" apply false
+
+
+    implementation platform('com.google.firebase:firebase-bom:31.3.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+}
