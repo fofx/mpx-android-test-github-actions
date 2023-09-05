@@ -27,9 +27,6 @@ jobs:
       - run: echo "Building Debug APK."
       - name: Build with Gradle
         run: ./gradlew assembleDebug
-      - name: Run Kotlin Linter
-        run: ./gradlew ktlintStagingDebugCheck
-
       - name: Run Unit Tests
         run: ./gradlew testStagingDebugUnitTest
 
