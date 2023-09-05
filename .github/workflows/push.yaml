@@ -27,4 +27,19 @@ jobs:
       - run: echo "Building Debug APK."
       - name: Build with Gradle
         run: ./gradlew assembleDebug
+      - name: Run Kotlin Linter
+        run: ./gradlew ktlintStagingDebugCheck
+
+      - name: Run Unit Tests
+        run: ./gradlew testStagingDebugUnitTest
+
+      - name: Run UI Tests
+        uses: reactivecircus/android-emulator-runner@v2
+          with:
+            api-level: 23
+            target: default
+            arch: x86
+            profile: Nexus 6
+            script: ./gradlew connectedCheck --stacktrace
+            
       - run: echo "Build status report=${{ job.status }}."
