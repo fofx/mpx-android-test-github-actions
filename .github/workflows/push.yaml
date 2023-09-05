@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub!"
@@ -28,12 +28,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew assembleDebug
       - name: Run Unit Tests
-        run: ./gradlew test
+        run: ./gradlew test --stacktrace
 
       - name: Run UI Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 23
+          api-level: 29
           target: default
           arch: x86
           profile: Nexus 6
