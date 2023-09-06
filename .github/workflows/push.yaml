@@ -41,7 +41,6 @@ jobs:
   build:
     name: Build
     runs-on: macos-latest
-    needs: [ playwright-emulator ]
     steps:
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub!"
@@ -62,14 +61,14 @@ jobs:
         run: ./gradlew assembleDebug
       - run: echo "Build status report=${{ job.status }}."
   run-unit-tests:
-    name: Build
+    name: Unit Tests
     runs-on: macos-latest
     needs: [ playwright-emulator, build ]
     steps:
       - name: Run Unit Tests
         run: ./gradlew test --stacktrace
   run-ui-tests:
-    name: Build
+    name: UI Tests
     runs-on: macos-latest
     needs: [ playwright-emulator, build ]
     steps:
