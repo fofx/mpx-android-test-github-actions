@@ -56,7 +56,6 @@ jobs:
           chmod +x ./start_emu_headless.sh
           EMULATOR_TIMEOUT=$EMULATOR_TIMEOUT EMULATOR_NAME=$EMULATOR_NAME ./start_emu_headless.sh
       - name: Run UI Tests
-        run:
-          script: ./gradlew connectedAndroidTest --stacktrace
+        run: ./gradlew connectedAndroidTest --stacktrace
 
       - run: echo "Build status report=${{ job.status }}."
