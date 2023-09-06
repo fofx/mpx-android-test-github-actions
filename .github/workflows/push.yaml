@@ -60,9 +60,18 @@ jobs:
       - run: echo "Building Debug APK."
       - name: Build with Gradle
         run: ./gradlew assembleDebug
+      - run: echo "Build status report=${{ job.status }}."
+  run-unit-tests:
+    name: Build
+    runs-on: macos-latest
+    needs: [ playwright-emulator, build ]
+    steps:
       - name: Run Unit Tests
         run: ./gradlew test --stacktrace
+  run-ui-tests:
+    name: Build
+    runs-on: macos-latest
+    needs: [ playwright-emulator, build ]
+    steps:
       - name: Run UI Tests
         run: ./gradlew connectedAndroidTest --stacktrace
-
-      - run: echo "Build status report=${{ job.status }}."
