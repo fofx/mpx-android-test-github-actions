@@ -63,7 +63,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: artifact
-          path: android/app/build/outputs/apk/release/app-debug.apk
+          path: android/app/build/outputs/apk/release/app-debug.aab
       - run: echo "Build status report=${{ job.status }}."
   run-unit-tests:
     name: Unit Tests
@@ -82,7 +82,7 @@ jobs:
 #        run: ./gradlew connectedAndroidTest --stacktrace
 
   upload-android:
-    needs: build
+    needs: [ build, run-unit-tests ]
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
@@ -95,4 +95,4 @@ jobs:
           appId: ${{secrets.FIREBASE_APP_ID_ANDROID}}
           token: ${{secrets.TOKEN}}
           groups: android_testers
-          file: app-release.apk
+          file: app-release.aab
