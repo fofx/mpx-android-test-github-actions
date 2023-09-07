@@ -15,10 +15,10 @@ env:
   EMULATOR_NAME: nexus
 
 jobs:
-  playwright-emulator:
-    timeout-minutes: 20
-    runs-on: macos-latest
-    steps:
+#  playwright-emulator:
+#    timeout-minutes: 20
+#    runs-on: macos-latest
+#    steps:
 #      - uses: actions/checkout@v3
 #
 #      - name: Add avdmanager and sdkmanager to system PATH
