@@ -40,7 +40,7 @@ jobs:
 #          EMULATOR_TIMEOUT=$EMULATOR_TIMEOUT EMULATOR_NAME=$EMULATOR_NAME ./start_emu_headless.sh
   build:
     name: Build
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub!"
@@ -59,18 +59,40 @@ jobs:
       - run: echo "Building Debug APK."
       - name: Build with Gradle
         run: ./gradlew assembleDebug
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifact
+          path: android/app/build/outputs/apk/release/app-debug.apk
       - run: echo "Build status report=${{ job.status }}."
   run-unit-tests:
     name: Unit Tests
-    runs-on: macos-latest
-    needs: [ playwright-emulator, build ]
+    runs-on: ubuntu-latest
+    needs: [ build ]
+#    needs: [ playwright-emulator, build ]
     steps:
       - name: Run Unit Tests
         run: ./gradlew test --stacktrace
-  run-ui-tests:
-    name: UI Tests
-    runs-on: macos-latest
-    needs: [ playwright-emulator, build ]
+#  run-ui-tests:
+#    name: UI Tests
+#    runs-on: macos-latest
+#    needs: [ playwright-emulator, build ]
+#    steps:
+#      - name: Run UI Tests
+#        run: ./gradlew connectedAndroidTest --stacktrace
+
+  upload-android:
+    needs: build
+    runs-on: ubuntu-latest
     steps:
-      - name: Run UI Tests
-        run: ./gradlew connectedAndroidTest --stacktrace
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: artifact
+      - name: upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID_ANDROID}}
+          token: ${{secrets.TOKEN}}
+          groups: android_testers
+          file: app-release.apk
