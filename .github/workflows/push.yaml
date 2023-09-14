@@ -40,7 +40,7 @@ jobs:
 #          EMULATOR_TIMEOUT=$EMULATOR_TIMEOUT EMULATOR_NAME=$EMULATOR_NAME ./start_emu_headless.sh
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub!"
@@ -67,7 +67,7 @@ jobs:
       - run: echo "Build status report=${{ job.status }}."
   run-unit-tests:
     name: Unit Tests
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     needs: [ build ]
 #    needs: [ playwright-emulator, build ]
     steps:
