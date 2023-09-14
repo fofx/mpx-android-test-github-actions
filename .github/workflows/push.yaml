@@ -90,6 +90,7 @@ jobs:
   upload-android:
     needs: [ build ]
     runs-on: ubuntu-latest
+    environment: Development
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v2
