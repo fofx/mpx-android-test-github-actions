@@ -71,6 +71,10 @@ jobs:
     needs: [ build ]
 #    needs: [ playwright-emulator, build ]
     steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: artifact
       - name: Run Unit Tests
         run: gradle test --stacktrace
 #  run-ui-tests:
