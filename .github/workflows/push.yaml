@@ -101,5 +101,5 @@ jobs:
         with:
           appId: ${{secrets.FIREBASE_APP_ID_ANDROID}}
           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-          groups: android_testers
+          groups: qa
           file: app-debug.apk
